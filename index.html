@@ -386,11 +386,14 @@
 
       const profil = profils[input];
 
-      const dominanteNom = fonctions[dominanteLetter] + " " + dominanteOrientation;
-      const auxiliaireNom = fonctions[auxiliaireLetter] + " " + auxiliaireOrientation;
+      const dominanteCode = dominanteLetter + (dominanteOrientation === "extravertie" ? "e" : "i");
+      const auxiliaireCode = auxiliaireLetter + (auxiliaireOrientation === "extravertie" ? "e" : "i");
 
-      const dominanteDescription = descriptionsFonctions[dominanteNom];
-      const auxiliaireDescription = descriptionsFonctions[auxiliaireNom];
+      const dominanteDescription = descriptionsFonctions[dominanteCode];
+      const auxiliaireDescription = descriptionsFonctions[auxiliaireCode];
+
+      const dominanteNom = dominanteDescription.nom;
+      const auxiliaireNom = auxiliaireDescription.nom;
 
       resultatDiv.innerHTML = `
         <h2>${profil.titre}</h2>
@@ -417,7 +420,7 @@
         <h2>Fonctions principales du profil ${input}</h2>
 
         <div class="function-box">
-          <h3>Fonction dominante : ${dominanteNom} — ${dominanteDescription.code}</h3>
+          <h3>Fonction dominante : ${dominanteNom} — ${dominanteCode}</h3>
           <p>${dominanteDescription.description}</p>
           <p>
             <strong>Rôle dans le profil :</strong> c’est généralement la fonction la plus naturelle.
@@ -427,7 +430,7 @@
         </div>
 
         <div class="function-box">
-          <h3>Fonction auxiliaire : ${auxiliaireNom} — ${auxiliaireDescription.code}</h3>
+          <h3>Fonction auxiliaire : ${auxiliaireNom} — ${auxiliaireCode}</h3>
           <p>${auxiliaireDescription.description}</p>
           <p>
             <strong>Rôle dans le profil :</strong> elle vient équilibrer la fonction dominante.
