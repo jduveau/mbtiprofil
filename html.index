@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fonctions MBTI</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 820px;
+      margin: 40px auto;
+      padding: 20px;
+      line-height: 1.5;
+      background: #f7f7fb;
+      color: #222;
+    }
+
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 26px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 28px;
+    }
+
+    h2 {
+      margin-top: 26px;
+      font-size: 22px;
+    }
+
+    h3 {
+      margin-top: 18px;
+      font-size: 18px;
+    }
+
+    p {
+      margin-bottom: 12px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 16px;
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      max-width: 280px;
+      padding: 12px;
+      font-size: 18px;
+      text-transform: uppercase;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+
+    button {
+      margin-top: 16px;
+      padding: 12px 18px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #222;
+      color: white;
+    }
+
+    button:hover {
+      background: #444;
+    }
+
+    .result {
+      margin-top: 24px;
+      padding: 18px;
+      background: #f2f4f8;
+      border-radius: 12px;
+    }
+
+    .profile-box {
+      background: #eaf3ff;
+      border-left: 5px solid #6ea8fe;
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+    }
+
+    .quality-box {
+      background: #e8f7ee;
+      border-left: 5px solid #74c69d;
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+    }
+
+    .watch-box {
+      background: #fdeaea;
+      border-left: 5px solid #f28482;
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+    }
+
+    .function-box {
+      background: #fff8e6;
+      border-left: 5px solid #f4c95d;
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+    }
+
+    .note-box {
+      background: #f4f4f4;
+      border-left: 5px solid #999;
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #444;
+    }
+
+    .error {
+      color: #b00020;
+      font-weight: bold;
+    }
+
+    .small {
+      font-size: 14px;
+      color: #555;
+    }
+
+    strong {
+      color: #111;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h1>Découvrir son profil MBTI et ses fonctions</h1>
+
+    <p>
+      Entre ton profil MBTI à 4 lettres, par exemple :
+      <strong>ENFP</strong>, <strong>ISTJ</strong>, <strong>ESTP</strong>.
+    </p>
+
+    <label for="mbtiInput">Profil MBTI</label>
+    <input type="text" id="mbtiInput" maxlength="4" placeholder="Ex : ENFP" />
+
+    <br />
+    <button onclick="analyserMBTI()">Afficher le résultat</button>
+
+    <div id="resultat" class="result"></div>
+
+    <p class="small">
+      Cet outil donne une lecture synthétique du profil MBTI, de sa fonction dominante
+      et de sa fonction auxiliaire.
+    </p>
+  </div>
+
+  <script>
+    function analyserMBTI() {
+      const input = document.getElementById("mbtiInput").value.trim().toUpperCase();
+      const resultatDiv = document.getElementById("resultat");
+
+      const meanings = {
+        E: "Extraverti",
+        I: "Introverti",
+        S: "Sensation",
+        N: "Intuition",
+        T: "Pensée",
+        F: "Sentiment",
+        J: "Jugement",
+        P: "Perception"
+      };
+
+      const fonctions = {
+        S: "Sensation",
+        N: "Intuition",
+        T: "Pensée",
+        F: "Sentiment"
+      };
+
+      const profils = {
+        ISTJ: {
+          titre: "ISTJ — Le profil structuré et fiable",
+          particularites: "Sérieux, structuré et fiable. Il aime les repères clairs et les responsabilités bien définies.",
+          qualites: "Il est rigoureux, constant et très organisé. On peut souvent compter sur lui.",
+          vigilance: "Il peut avoir du mal avec l’imprévu ou les méthodes trop floues."
+        },
+        ISFJ: {
+          titre: "ISFJ — Le profil attentif et protecteur",
+          particularites: "Discret, attentif et protecteur. Il veille souvent au bien-être des autres avec beaucoup de sérieux.",
+          qualites: "Il est dévoué, consciencieux et très attentif aux besoins concrets.",
+          vigilance: "Il peut s’oublier lui-même ou avoir du mal à poser ses limites."
+        },
+        INFJ: {
+          titre: "INFJ — Le profil profond et orienté sens",
+          particularites: "Réfléchi, profond et tourné vers le sens. Il cherche souvent à comprendre les personnes et les situations en profondeur.",
+          qualites: "Il a une forte intuition et une vraie capacité à percevoir ce qui compte vraiment.",
+          vigilance: "Il peut être trop idéaliste ou trop exigeant envers lui-même et les autres."
+        },
+        INTJ: {
+          titre: "INTJ — Le profil stratégique et visionnaire",
+          particularites: "Indépendant, stratégique et orienté vision. Il aime penser à long terme et construire des plans solides.",
+          qualites: "Il analyse avec recul et sait anticiper. Il est souvent très efficace dans la stratégie.",
+          vigilance: "Il peut paraître froid, distant ou impatient face à des logiques moins rationnelles."
+        },
+        ISTP: {
+          titre: "ISTP — Le profil pragmatique et autonome",
+          particularites: "Calme, pragmatique et autonome. Il préfère souvent observer, comprendre et agir efficacement.",
+          qualites: "Il sait résoudre les problèmes de manière concrète et rapide.",
+          vigilance: "Il peut sembler détaché ou peu expressif dans les relations."
+        },
+        ISFP: {
+          titre: "ISFP — Le profil sensible et authentique",
+          particularites: "Sensible, authentique et discret. Il agit souvent en accord avec ce qu’il ressent profondément.",
+          qualites: "Il apporte de la douceur, de l’écoute et un sens fort de l’authenticité.",
+          vigilance: "Il peut éviter les conflits ou manquer de projection à long terme."
+        },
+        INFP: {
+          titre: "INFP — Le profil idéaliste et introspectif",
+          particularites: "Idéaliste, introspectif et guidé par ses valeurs. Il cherche à rester fidèle à ce qui a du sens pour lui.",
+          qualites: "Il a une grande richesse intérieure et une forte capacité d’empathie.",
+          vigilance: "Il peut manquer de cadre, se disperser ou se replier sur lui-même."
+        },
+        INTP: {
+          titre: "INTP — Le profil analytique et conceptuel",
+          particularites: "Curieux, analytique et tourné vers les idées. Il aime comprendre les systèmes et explorer des concepts.",
+          qualites: "Il a une pensée logique, originale et souvent très inventive.",
+          vigilance: "Il peut rester trop dans l’analyse et avoir du mal à passer à l’action."
+        },
+        ESTP: {
+          titre: "ESTP — Le profil énergique et orienté action",
+          particularites: "Énergique, direct et orienté action. Il aime réagir vite et saisir les opportunités concrètes.",
+          qualites: "Il est adaptable, audacieux et efficace dans l’urgence.",
+          vigilance: "Il peut agir trop vite ou manquer de recul avant de décider."
+        },
+        ESFP: {
+          titre: "ESFP — Le profil spontané et sociable",
+          particularites: "Chaleureux, spontané et très sociable. Il aime créer du lien et vivre les choses pleinement.",
+          qualites: "Il apporte de l’énergie, de l’enthousiasme et une bonne ambiance.",
+          vigilance: "Il peut manquer de structure ou éviter les contraintes trop fortes."
+        },
+        ENFP: {
+          titre: "ENFP — Le profil créatif et inspirant",
+          particularites: "Créatif, enthousiaste et tourné vers les possibilités. Il aime imaginer, lancer des idées et inspirer les autres.",
+          qualites: "Il stimule, motive et ouvre de nouvelles perspectives.",
+          vigilance: "Il peut se disperser ou avoir du mal à aller jusqu’au bout."
+        },
+        ENTP: {
+          titre: "ENTP — Le profil inventif et challenger",
+          particularites: "Inventif, vif et aime challenger les idées. Il adore explorer de nouvelles pistes et questionner l’existant.",
+          qualites: "Il est très créatif, rapide d’esprit et à l’aise dans l’innovation.",
+          vigilance: "Il peut provoquer, s’éparpiller ou se lasser rapidement."
+        },
+        ESTJ: {
+          titre: "ESTJ — Le profil organisé et orienté résultats",
+          particularites: "Structuré, efficace et orienté résultats. Il aime organiser, décider et faire avancer les choses.",
+          qualites: "Il sait cadrer, coordonner et assurer le bon fonctionnement d’un groupe.",
+          vigilance: "Il peut devenir trop directif ou peu souple face à d’autres façons de faire."
+        },
+        ESFJ: {
+          titre: "ESFJ — Le profil relationnel et coopératif",
+          particularites: "Relationnel, attentif et coopératif. Il cherche souvent à maintenir l’harmonie dans le groupe.",
+          qualites: "Il crée du lien, soutient les autres et facilite la coopération.",
+          vigilance: "Il peut trop chercher l’approbation ou prendre les tensions trop à cœur."
+        },
+        ENFJ: {
+          titre: "ENFJ — Le profil fédérateur et tourné vers les autres",
+          particularites: "Charismatique, impliqué et tourné vers les autres. Il aime faire grandir les personnes et fédérer autour d’un projet.",
+          qualites: "Il a un fort leadership humain et une bonne compréhension des dynamiques relationnelles.",
+          vigilance: "Il peut trop se surinvestir ou vouloir trop porter les autres."
+        },
+        ENTJ: {
+          titre: "ENTJ — Le profil décidé et stratégique",
+          particularites: "Décidé, ambitieux et stratégique. Il aime piloter, structurer et atteindre des objectifs élevés.",
+          qualites: "Il prend des décisions rapidement et sait entraîner les autres vers l’action.",
+          vigilance: "Il peut paraître dominateur ou impatient face à des rythmes plus lents."
+        }
+      };
+
+      const descriptionsFonctions = {
+        "Sensation extravertie": {
+          code: "Se",
+          description: "La sensation extravertie correspond à une attention forte au réel immédiat. La personne observe ce qui se passe concrètement, réagit vite, s’adapte à l’environnement et apprend beaucoup par l’expérience directe."
+        },
+        "Sensation introvertie": {
+          code: "Si",
+          description: "La sensation introvertie s’appuie sur l’expérience, les repères connus et la mémoire des situations passées. La personne recherche la fiabilité, la stabilité et les méthodes qui ont déjà fait leurs preuves."
+        },
+        "Intuition extravertie": {
+          code: "Ne",
+          description: "L’intuition extravertie repère les possibilités, les liens entre les idées et les scénarios nouveaux. La personne aime explorer, imaginer, ouvrir des pistes et envisager plusieurs options à la fois."
+        },
+        "Intuition introvertie": {
+          code: "Ni",
+          description: "L’intuition introvertie cherche à comprendre le sens profond des situations. La personne perçoit des tendances, formule une vision globale et aime anticiper l’évolution des choses à long terme."
+        },
+        "Pensée extravertie": {
+          code: "Te",
+          description: "La pensée extravertie organise, structure et cherche l’efficacité. La personne aime fixer des objectifs, prendre des décisions, clarifier les responsabilités et obtenir des résultats concrets."
+        },
+        "Pensée introvertie": {
+          code: "Ti",
+          description: "La pensée introvertie analyse les idées avec précision. La personne cherche la cohérence logique, comprend les systèmes en profondeur et aime vérifier si un raisonnement tient vraiment."
+        },
+        "Sentiment extraverti": {
+          code: "Fe",
+          description: "Le sentiment extraverti est attentif aux relations, aux besoins du groupe et à l’harmonie collective. La personne cherche à créer du lien, soutenir les autres et maintenir une dynamique positive."
+        },
+        "Sentiment introverti": {
+          code: "Fi",
+          description: "Le sentiment introverti s’appuie sur les valeurs personnelles, l’authenticité et la cohérence intérieure. La personne cherche à agir en accord avec ce qui est juste, important ou profondément significatif pour elle."
+        }
+      };
+
+      const isValid =
+        input.length === 4 &&
+        ["E", "I"].includes(input[0]) &&
+        ["S", "N"].includes(input[1]) &&
+        ["T", "F"].includes(input[2]) &&
+        ["J", "P"].includes(input[3]);
+
+      if (!isValid) {
+        resultatDiv.innerHTML = `
+          <p class="error">
+            Veuillez entrer un profil valide : E ou I, puis S ou N, puis T ou F, puis J ou P.
+            Exemple : ENFP, ISTJ, INFJ.
+          </p>
+        `;
+        return;
+      }
+
+      const first = input[0];
+      const second = input[1];
+      const third = input[2];
+      const fourth = input[3];
+
+      let dominanteLetter = "";
+      let dominanteOrientation = "";
+      let auxiliaireLetter = "";
+      let auxiliaireOrientation = "";
+
+      // Fonction dominante
+      if (first === "E") {
+        if (fourth === "J") {
+          dominanteLetter = third;
+          dominanteOrientation = "extravertie";
+        } else {
+          dominanteLetter = second;
+          dominanteOrientation = "extravertie";
+        }
+      } else {
+        if (fourth === "J") {
+          dominanteLetter = second;
+          dominanteOrientation = "introvertie";
+        } else {
+          dominanteLetter = third;
+          dominanteOrientation = "introvertie";
+        }
+      }
+
+      // Fonction auxiliaire
+      if (first === "E") {
+        if (fourth === "J") {
+          auxiliaireLetter = second;
+          auxiliaireOrientation = "introvertie";
+        } else {
+          auxiliaireLetter = third;
+          auxiliaireOrientation = "introvertie";
+        }
+      } else {
+        if (fourth === "J") {
+          auxiliaireLetter = third;
+          auxiliaireOrientation = "extravertie";
+        } else {
+          auxiliaireLetter = second;
+          auxiliaireOrientation = "extravertie";
+        }
+      }
+
+      const profil = profils[input];
+
+      const dominanteNom = fonctions[dominanteLetter] + " " + dominanteOrientation;
+      const auxiliaireNom = fonctions[auxiliaireLetter] + " " + auxiliaireOrientation;
+
+      const dominanteDescription = descriptionsFonctions[dominanteNom];
+      const auxiliaireDescription = descriptionsFonctions[auxiliaireNom];
+
+      resultatDiv.innerHTML = `
+        <h2>${profil.titre}</h2>
+
+        <p><strong>Lecture des lettres :</strong> 
+          ${meanings[first]}, ${meanings[second]}, ${meanings[third]}, ${meanings[fourth]}.
+        </p>
+
+        <div class="profile-box">
+          <h3>👤 Particularités principales</h3>
+          <p>${profil.particularites}</p>
+        </div>
+
+        <div class="quality-box">
+          <h3>📈 Qualités</h3>
+          <p>${profil.qualites}</p>
+        </div>
+
+        <div class="watch-box">
+          <h3>📉 Point de vigilance</h3>
+          <p>${profil.vigilance}</p>
+        </div>
+
+        <h2>Fonctions principales du profil ${input}</h2>
+
+        <div class="function-box">
+          <h3>Fonction dominante : ${dominanteNom} — ${dominanteDescription.code}</h3>
+          <p>${dominanteDescription.description}</p>
+          <p>
+            <strong>Rôle dans le profil :</strong> c’est généralement la fonction la plus naturelle.
+            Elle influence fortement la manière dont la personne comprend le monde, prend de l’énergie
+            et aborde les situations.
+          </p>
+        </div>
+
+        <div class="function-box">
+          <h3>Fonction auxiliaire : ${auxiliaireNom} — ${auxiliaireDescription.code}</h3>
+          <p>${auxiliaireDescription.description}</p>
+          <p>
+            <strong>Rôle dans le profil :</strong> elle vient équilibrer la fonction dominante.
+            Elle aide la personne à compléter sa manière d’agir, de décider ou d’entrer en relation
+            avec son environnement.
+          </p>
+        </div>
+
+        <div class="note-box">
+          <strong>À garder en tête :</strong> le MBTI est un outil de réflexion sur les préférences
+          de fonctionnement. Il ne définit pas une personne de manière fixe et ne doit pas être utilisé
+          pour enfermer quelqu’un dans une catégorie. Il peut toutefois aider à mieux comprendre ses
+          sources de motivation, ses besoins, ses forces et ses points d’attention.
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
