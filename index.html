@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Découvrir son profil MBTI</title>
 
   <style>
@@ -36,10 +36,6 @@
     h3 {
       margin-top: 0;
       font-size: 18px;
-    }
-
-    p {
-      margin-bottom: 12px;
     }
 
     label {
@@ -133,10 +129,6 @@
       font-size: 14px;
       color: #555;
     }
-
-    strong {
-      color: #111;
-    }
   </style>
 </head>
 
@@ -150,10 +142,10 @@
     </p>
 
     <label for="mbtiInput">Profil MBTI</label>
-    <input type="text" id="mbtiInput" maxlength="4" placeholder="Ex : ENFP" />
+    <input type="text" id="mbtiInput" maxlength="4" placeholder="Ex : ENFP">
 
-    <br />
-    <button type="button" onclick="analyserMBTI()">Afficher le résultat</button>
+    <br>
+    <button type="button" id="analyseButton">Afficher le résultat</button>
 
     <div id="resultat" class="result">
       <p class="small">Le résultat apparaîtra ici.</p>
@@ -166,8 +158,9 @@
   </div>
 
   <script>
-    function analyserMBTI() {
-      const input = document.getElementById("mbtiInput").value.trim().toUpperCase();
+    document.addEventListener("DOMContentLoaded", function () {
+      const inputElement = document.getElementById("mbtiInput");
+      const buttonElement = document.getElementById("analyseButton");
       const resultatDiv = document.getElementById("resultat");
 
       const meanings = {
@@ -347,87 +340,99 @@
         }
       };
 
-      const isValid =
-        input.length === 4 &&
-        ["E", "I"].includes(input[0]) &&
-        ["S", "N"].includes(input[1]) &&
-        ["T", "F"].includes(input[2]) &&
-        ["J", "P"].includes(input[3]) &&
-        profils[input];
+      function analyserMBTI() {
+        try {
+          const input = inputElement.value.trim().toUpperCase();
 
-      if (!isValid) {
-        resultatDiv.innerHTML = `
-          <p class="error">
-            Veuillez entrer un profil MBTI valide à 4 lettres.
-            Exemple : ENFP, INTP, ISTJ, ESFJ.
-          </p>
-        `;
-        return;
+          if (!profils[input]) {
+            resultatDiv.innerHTML = `
+              <p class="error">
+                Veuillez entrer un profil MBTI valide à 4 lettres.
+                Exemple : ENFP, INTP, ISTJ, ESFJ.
+              </p>
+            `;
+            return;
+          }
+
+          const profil = profils[input];
+          const dominanteCode = profil.dominante;
+          const auxiliaireCode = profil.auxiliaire;
+          const dominante = fonctions[dominanteCode];
+          const auxiliaire = fonctions[auxiliaireCode];
+
+          resultatDiv.innerHTML = `
+            <h2>${profil.titre}</h2>
+
+            <p>
+              <strong>Lecture des lettres :</strong>
+              ${meanings[input[0]]}, ${meanings[input[1]]}, ${meanings[input[2]]}, ${meanings[input[3]]}.
+            </p>
+
+            <div class="profile-box">
+              <h3>👤 Particularités principales</h3>
+              <p>${profil.particularites}</p>
+            </div>
+
+            <div class="quality-box">
+              <h3>📈 Qualités</h3>
+              <p>${profil.qualites}</p>
+            </div>
+
+            <div class="watch-box">
+              <h3>📉 Point de vigilance</h3>
+              <p>${profil.vigilance}</p>
+            </div>
+
+            <h2>Fonctions principales du profil ${input}</h2>
+
+            <div class="function-box">
+              <h3>Fonction dominante : ${dominante.nom} — ${dominanteCode}</h3>
+              <p>${dominante.description}</p>
+              <p>
+                <strong>Rôle dans le profil :</strong>
+                c’est généralement la fonction la plus naturelle. Elle influence fortement
+                la manière dont la personne comprend le monde, prend de l’énergie et aborde
+                les situations.
+              </p>
+            </div>
+
+            <div class="function-box">
+              <h3>Fonction auxiliaire : ${auxiliaire.nom} — ${auxiliaireCode}</h3>
+              <p>${auxiliaire.description}</p>
+              <p>
+                <strong>Rôle dans le profil :</strong>
+                elle vient équilibrer la fonction dominante. Elle aide la personne à compléter
+                sa manière d’agir, de décider ou d’entrer en relation avec son environnement.
+              </p>
+            </div>
+
+            <div class="note-box">
+              <strong>À garder en tête :</strong>
+              le MBTI est un outil de réflexion sur les préférences de fonctionnement.
+              Il ne définit pas une personne de manière fixe et ne doit pas être utilisé
+              pour enfermer quelqu’un dans une catégorie. Il peut toutefois aider à mieux
+              comprendre ses sources de motivation, ses besoins, ses forces et ses points d’attention.
+            </div>
+          `;
+        } catch (error) {
+          resultatDiv.innerHTML = `
+            <p class="error">
+              Une erreur technique empêche l’affichage du résultat.
+              Vérifiez que le code HTML a bien été copié entièrement.
+            </p>
+          `;
+          console.error(error);
+        }
       }
 
-      const profil = profils[input];
+      buttonElement.addEventListener("click", analyserMBTI);
 
-      const dominanteCode = profil.dominante;
-      const auxiliaireCode = profil.auxiliaire;
-
-      const dominante = fonctions[dominanteCode];
-      const auxiliaire = fonctions[auxiliaireCode];
-
-      resultatDiv.innerHTML = `
-        <h2>${profil.titre}</h2>
-
-        <p>
-          <strong>Lecture des lettres :</strong>
-          ${meanings[input[0]]}, ${meanings[input[1]]}, ${meanings[input[2]]}, ${meanings[input[3]]}.
-        </p>
-
-        <div class="profile-box">
-          <h3>👤 Particularités principales</h3>
-          <p>${profil.particularites}</p>
-        </div>
-
-        <div class="quality-box">
-          <h3>📈 Qualités</h3>
-          <p>${profil.qualites}</p>
-        </div>
-
-        <div class="watch-box">
-          <h3>📉 Point de vigilance</h3>
-          <p>${profil.vigilance}</p>
-        </div>
-
-        <h2>Fonctions principales du profil ${input}</h2>
-
-        <div class="function-box">
-          <h3>Fonction dominante : ${dominante.nom} — ${dominanteCode}</h3>
-          <p>${dominante.description}</p>
-          <p>
-            <strong>Rôle dans le profil :</strong>
-            c’est généralement la fonction la plus naturelle. Elle influence fortement
-            la manière dont la personne comprend le monde, prend de l’énergie et aborde
-            les situations.
-          </p>
-        </div>
-
-        <div class="function-box">
-          <h3>Fonction auxiliaire : ${auxiliaire.nom} — ${auxiliaireCode}</h3>
-          <p>${auxiliaire.description}</p>
-          <p>
-            <strong>Rôle dans le profil :</strong>
-            elle vient équilibrer la fonction dominante. Elle aide la personne à compléter
-            sa manière d’agir, de décider ou d’entrer en relation avec son environnement.
-          </p>
-        </div>
-
-        <div class="note-box">
-          <strong>À garder en tête :</strong>
-          le MBTI est un outil de réflexion sur les préférences de fonctionnement.
-          Il ne définit pas une personne de manière fixe et ne doit pas être utilisé
-          pour enfermer quelqu’un dans une catégorie. Il peut toutefois aider à mieux
-          comprendre ses sources de motivation, ses besoins, ses forces et ses points d’attention.
-        </div>
-      `;
-    }
+      inputElement.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+          analyserMBTI();
+        }
+      });
+    });
   </script>
 </body>
 </html>
